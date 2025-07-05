@@ -42,18 +42,10 @@ const App = () => {
           const sanitizedMessage = {
             ...message,
             message: DOMPurify.sanitize(message.message, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] }),
+            isOwn: false, 
           };
 
-          // Avoid duplicates
-          setMessages((prev) => {
-            const exists = prev.some(
-              (msg) =>
-                msg.username === sanitizedMessage.username &&
-                msg.message === sanitizedMessage.message &&
-                msg.timestamp === sanitizedMessage.timestamp
-            );
-            return exists ? prev : [...prev, sanitizedMessage];
-          });
+          setMessages((prev) => [...prev, sanitizedMessage]);
         }
       } catch (error) {
         console.error('Message parse error:', error);
@@ -98,6 +90,7 @@ const App = () => {
         username,
         message: sanitized,
         timestamp: new Date().toISOString(),
+        isOwn: true,
       };
 
       try {
